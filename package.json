@@ -1,0 +1,30 @@
+{
+  "name": "smartBet",
+  "version": "0.0.0",
+  "description": "bet forecast",
+  "main": "server.js",
+  "dependencies": {
+    "fs": "0.0.2",
+    "tmp": "0.0.25",
+    "express": "^4.12.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tonynho/SmartBet.git"
+  },
+  "keywords": [
+    "bet",
+    "football",
+    "algorithm"
+  ],
+  "author": "Kristiyan and Anton",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tonynho/SmartBet/issues"
+  },
+  "homepage": "https://github.com/tonynho/SmartBet"
+}
