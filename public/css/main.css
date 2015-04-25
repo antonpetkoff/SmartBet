@@ -1,12 +1,35 @@
 body{
     padding-top:60px;
+    background-image: url("../img/bg.jpg");
+    background-size: 100% auto;
+    color: #ededed;
 }
-.logo{
-    margin:0 10px;
-}
-li{
+.team-block{
     text-align: center;
 }
-article{
-    height: 300px;
+.logo-container{
+    position: relative;
+}
+.logo-container .logo-back{
+    position: relative;
+    z-index: 1;
+    width: 60%;
+}
+.logo-container .logo-team{
+    top: 25%;
+    left:35%;
+    position: absolute;
+    z-index: 2;
+    width: 30%;
+}
+.choose-team{
+    margin: 40px 100px;
+    background-color:#2d2e2f;
+}
+.choose-team .header{
+    font-family: Impact;
+    padding: 5px;
+    font-size: 1.2em;
+    background-color: #181818;
+    color: #dbdbdb;
 }
