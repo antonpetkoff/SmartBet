@@ -1,5 +1,8 @@
 package math.model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import statistics.Keys;
 import statistics.Statistics;
 
@@ -128,20 +131,39 @@ public class MathModel {
         double avgLeagueGoalsAtHome = avgLeagueGoals(HOME);
         double avgLeagueGoalsAway = avgLeagueGoals(AWAY);
         
-        double hostAttack = avgTeamGoals(HOME, FOR, hostName);
-        double guestDefence = avgTeamGoals(AWAY, AGAINST, guestName);
-        double hostGoals = hostAttack * guestDefence * avgLeagueGoalsAtHome;
+        double hostAttack = avgTeamGoals(HOME, FOR, hostName) / avgLeagueGoalsAtHome;
+        double guestDefence = avgTeamGoals(AWAY, AGAINST, guestName) / avgLeagueGoalsAtHome;
+        double avgHostGoals = hostAttack * guestDefence * avgLeagueGoalsAtHome;
         
-        double guestAttack = avgTeamGoals(AWAY, FOR, guestName);
-        double hostDefence = avgTeamGoals(HOME, AGAINST, hostName);
-        double guestGoals = guestAttack * hostDefence * avgLeagueGoalsAway;
+        double guestAttack = avgTeamGoals(AWAY, FOR, guestName) / avgLeagueGoalsAway;
+        double hostDefence = avgTeamGoals(HOME, AGAINST, hostName) / avgLeagueGoalsAway;
+        double avgGuestGoals = guestAttack * hostDefence * avgLeagueGoalsAway;
         
-        return distribute(hostGoals, guestGoals);
+        System.out.println(avgHostGoals + " " + avgGuestGoals);
+        
+        return distribute(avgHostGoals, avgGuestGoals);
     }
     
-    String distribute(double hostGoals, double guestGoals) {
-        // TODO
-        return null;
+    String distribute(double avgHostGoals, double avgGuestGoals) {
+        Map<Double, String> map = new HashMap<Double, String>();
+        
+        double hostWin = 0.0, draw = 0.0, guestWin = 0.0;
+        for (int hostGoals = 0; hostGoals <= 12; ++hostGoals) {
+            for (int guestGoals = 0; guestGoals <= 12; ++guestGoals) {
+                double result = poisson(hostGoals, avgHostGoals) * poisson(guestGoals, avgGuestGoals);
+                map.put(result, hostGoals + ":" + guestGoals);
+                
+                if (hostGoals > guestGoals) {
+                    hostWin += result;
+                } else if (hostGoals == guestGoals) {
+                    draw += result;
+                } else if (hostGoals < guestGoals) {
+                    guestWin += result;
+                }
+            }
+        }
+        
+        return hostWin + ", " + draw + ", " + guestWin + " / " + map.toString();
     }
 
     public String getHostName() {
@@ -176,8 +198,8 @@ public class MathModel {
     
     public static void main(String[] args) {
         Statistics stats = new Statistics();
-        MathModel mm = new MathModel("Burnley", "Man United", stats);
-        mm.calculateProbabilities();
+        MathModel mm = new MathModel("Man City", "Aston Villa", stats);
+        System.out.println(mm.calculateProbabilities());
     }
 
 
