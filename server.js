@@ -1,7 +1,6 @@
 var express = require("express"),
     app = express(),
-    fs = require("fs"),
-    data = require("./data.json");
+    fs = require("fs");
 
 app.set("views", "./views");
 app.set('view engine', 'jade');
@@ -16,13 +15,13 @@ app.get("/", function(req, res, next){
   };
 });
 
-app.get("/product/:id", function(req, res, next){
+/*app.get("/product/:id", function(req, res, next){
   if (fs.existsSync(__dirname+"/views/index.jade")) {
     res.render("product", {shop:data.products[req.params.id]});
   }else {
     next();
   };
-});
+});*/
 
 app.get("/:fileName", function(req, res, next){
 	if(req.params && req.params.fileName && req.params.fileName != "product" && fs.existsSync(__dirname+"/views/"+req.params.fileName+".jade")){
