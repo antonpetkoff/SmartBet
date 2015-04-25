@@ -1,7 +1,10 @@
 package math.model;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.TreeMap;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import statistics.Keys;
 import statistics.Statistics;
@@ -139,15 +142,21 @@ public class MathModel {
         double hostDefence = avgTeamGoals(HOME, AGAINST, hostName) / avgLeagueGoalsAway;
         double avgGuestGoals = guestAttack * hostDefence * avgLeagueGoalsAway;
         
-        System.out.println(avgHostGoals + " " + avgGuestGoals);
+        String jsonString = null;
+        try {
+            jsonString = distribute(avgHostGoals, avgGuestGoals);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         
-        return distribute(avgHostGoals, avgGuestGoals);
+        return jsonString;
     }
     
-    String distribute(double avgHostGoals, double avgGuestGoals) {
-        Map<Double, String> map = new HashMap<Double, String>();
+    String distribute(double avgHostGoals, double avgGuestGoals) throws JSONException {
+        TreeMap<Double, String> map = new TreeMap<Double, String>();
         
         double hostWin = 0.0, draw = 0.0, guestWin = 0.0;
+        double under = 0.0, over = 0.0, bothTeamsScore = 0.0, oneTeamScores = 0.0;
         for (int hostGoals = 0; hostGoals <= 12; ++hostGoals) {
             for (int guestGoals = 0; guestGoals <= 12; ++guestGoals) {
                 double result = poisson(hostGoals, avgHostGoals) * poisson(guestGoals, avgGuestGoals);
@@ -160,10 +169,41 @@ public class MathModel {
                 } else if (hostGoals < guestGoals) {
                     guestWin += result;
                 }
+                
+                if (hostGoals + guestGoals < 2.5) {
+                    under += result;
+                } else {
+                    over += result;
+                }
+                
+                if (hostGoals > 0 && guestGoals > 0) {
+                    bothTeamsScore += result;
+                } else {
+                    oneTeamScores += result;
+                }
             }
         }
         
-        return hostWin + ", " + draw + ", " + guestWin + " / " + map.toString();
+        JSONObject outcomes = new JSONObject();
+        outcomes.put("1", hostWin).put("X", draw).put("2", guestWin);
+        
+        JSONObject top5 = new JSONObject();
+        int i = 0;
+        for (Double key : map.descendingKeySet()) {
+            if (i == 5) {
+                break;
+            }
+            top5.put(map.get(key), key);
+            ++i;
+        }
+        
+        JSONObject overUnder = new JSONObject();
+        overUnder.put("over", over).put("under", under);
+        
+        JSONObject bts = new JSONObject();
+        bts.put("both", bothTeamsScore).put("one", oneTeamScores);
+        
+        return new JSONArray().put(outcomes).put(top5).put(overUnder).put(bts).toString();
     }
 
     public String getHostName() {
@@ -198,9 +238,8 @@ public class MathModel {
     
     public static void main(String[] args) {
         Statistics stats = new Statistics();
-        MathModel mm = new MathModel("Man City", "Aston Villa", stats);
+        MathModel mm = new MathModel("Arsenal", "Chelsea", stats);
         System.out.println(mm.calculateProbabilities());
     }
-
 
 }
