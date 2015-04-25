@@ -13,8 +13,6 @@ import org.apache.commons.csv.CSVRecord;
 /**
  * holds statistics from the start of the 2014/2015 EPL season until
  * the last played match
- * @author tony
- *
  */
 public class Statistics {
     
@@ -39,7 +37,7 @@ public class Statistics {
     /**
      * The returned CSVRecord contains 21 fields in the following format:
      * 
-     * Date = Match Date (DD/MM/YYYY)
+     * Date = Match Date (DD/MM/YY)
      * HomeTeam = Home Team
      * AwayTeam = Away Team
      * FTHG = Full Time Home Team Goals
