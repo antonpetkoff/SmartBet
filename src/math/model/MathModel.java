@@ -1,5 +1,9 @@
 package math.model;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.TreeMap;
 
 import org.json.JSONArray;
@@ -18,6 +22,7 @@ public class MathModel {
     private static final char AGAINST = 'A';    // goals against
     
     private Statistics stats;
+    private String[] teamNames;
     private String hostName;
     private String guestName;
     
@@ -27,10 +32,33 @@ public class MathModel {
     private static final String SEASON_START_BOUND = "11/05/14";
     
     public MathModel(String hostName, String guestName, Statistics stats) {
+        try {
+            teamNames = readTeamNames("res/epl_teamNames.json");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        
         setHostName(hostName);
         setGuestName(guestName);
         this.stats = stats;
         startRecordID = stats.size() - 1;
+    }
+    
+    private String[] readTeamNames(String jsonPath) throws JSONException {
+        String jsonText = null;
+        try(BufferedReader br = new BufferedReader(new FileReader(new File(jsonPath)));) {
+            jsonText = br.readLine();
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
+        
+        JSONArray json = new JSONArray(jsonText);
+        
+        String[] teamNames = new String[json.length()];
+        for (int i = 0; i < json.length(); ++i) {
+            teamNames[i] = json.getString(i);
+        }
+        return teamNames;
     }
     
     static long factorial(int n) {
@@ -43,14 +71,6 @@ public class MathModel {
     
     static double poisson(int k, double lambda) {
         return Math.pow(lambda, k) * Math.pow(Math.E, -lambda) / factorial(k);
-    }
-    
-    static double mean(int... numbers) {
-        long sum = 0;
-        for (int i = 0; i < numbers.length; ++i) {
-            sum += numbers[i];
-        }
-        return sum / (double) numbers.length;
     }
 
     /**
@@ -157,6 +177,7 @@ public class MathModel {
         
         double hostWin = 0.0, draw = 0.0, guestWin = 0.0;
         double under = 0.0, over = 0.0, bothTeamsScore = 0.0, oneTeamScores = 0.0;
+        
         for (int hostGoals = 0; hostGoals <= 12; ++hostGoals) {
             for (int guestGoals = 0; guestGoals <= 12; ++guestGoals) {
                 double result = poisson(hostGoals, avgHostGoals) * poisson(guestGoals, avgGuestGoals);
@@ -210,8 +231,19 @@ public class MathModel {
         return hostName;
     }
 
+    private boolean isValidTeamName(String teamName) {
+        for (String name : teamNames) {
+            if (teamName.equals(name)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
     public void setHostName(String hostName) {
-        // TODO check argument for correctness
+        if (!isValidTeamName(hostName)) {
+            throw new IllegalArgumentException("hostName doesn\'t exist in teamNames!");
+        }
         this.hostName = hostName;
     }
 
@@ -220,12 +252,18 @@ public class MathModel {
     }
 
     public void setGuestName(String guestName) {
-        // TODO check argument for correctness
+        if (!isValidTeamName(hostName)) {
+            throw new IllegalArgumentException("guestName doesn\'t exist in teamNames!");
+        }
         this.guestName = guestName;
     }
     
     public Statistics getStats() {
         return stats;
+    }
+    
+    public String[] getLeagueTeams() {
+        return teamNames;
     }
     
     public int getStartRecordID() {

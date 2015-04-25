@@ -26,10 +26,4 @@ public class TestUtilities {
         assertEquals(Double.valueOf(0.238466676192325), Double.valueOf(MathModel.poisson(2, 1.37)), EPSILON);
     }
     
-    @Test
-    public void testMean() {
-        assertEquals(Double.valueOf(3.5), Double.valueOf(MathModel.mean(1, 2, 3, 4, 5, 6)));
-        assertEquals(Double.valueOf(42.8), Double.valueOf(MathModel.mean(23, 65, 26, 76, 24)));
-    }
-    
 }
