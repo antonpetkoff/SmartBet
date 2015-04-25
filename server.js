@@ -1,7 +1,7 @@
 var express = require("express"),
     app = express(),
-    fs = require("fs");
-
+    fs = require("fs"),
+    data = {teams:["Manchester United", "Liverpool"]};
 app.set("views", "./views");
 app.set('view engine', 'jade');
 

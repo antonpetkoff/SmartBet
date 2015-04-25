@@ -1,0 +1,12 @@
+body{
+    padding-top:60px;
+}
+.logo{
+    margin:0 10px;
+}
+li{
+    text-align: center;
+}
+article{
+    height: 300px;
+}

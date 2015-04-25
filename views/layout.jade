@@ -1,0 +1,26 @@
+html
+    head
+        title=title
+        link(rel="stylesheet",type="text/css",href="/lib/bootstrap/dist/css/bootstrap.css")
+        link(rel="stylesheet",type="text/css",href="/css/main.css")
+        link(rel="stylesheet",type="text/css",href="/lib/fontawesome/css/font-awesome.css")
+        style
+            span.logo
+                padding: 0 5px;
+            
+  body
+    .container
+        nav.nav.navbar-inverse.navbar-fixed-top
+            .container
+                .navbar-header
+                    a.navbar-brand(href="/index")
+                        i.fa.fa-cutlery
+                        span.logo SmartBet
+
+        .container-fluid
+            .row
+                .col-xs-12.col-md-2
+                    //- include sidebar.jade
+                .col-xs-12.col-md-9
+                    .content 
+                        block content
