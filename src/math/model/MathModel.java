@@ -15,11 +15,17 @@ import statistics.Statistics;
 
 public class MathModel {
 
+    private static final String HOST_WIN = "H";
+    private static final String DRAW = "D";
+    private static final String AWAY_WIN = "A";
+    
     private static final char HOME = 'H';   // marks matches as host
     private static final char AWAY = 'A';   // marks matches as guest
     
     private static final char FOR = 'F';        // goals for
     private static final char AGAINST = 'A';    // goals against
+    
+    private static final int FORM_MATCH_COUNT = 8;
     
     private Statistics stats;
     private String[] teamNames;
@@ -177,11 +183,11 @@ public class MathModel {
         
         double hostAttack = avgTeamGoals(HOME, FOR, hostName) / avgLeagueGoalsAtHome;
         double guestDefence = avgTeamGoals(AWAY, AGAINST, guestName) / avgLeagueGoalsAtHome;
-        double avgHostGoals = hostAttack * guestDefence * avgLeagueGoalsAtHome;
+        double avgHostGoals = hostAttack * guestDefence * avgLeagueGoalsAtHome * Math.sqrt(evaluateForm(hostName, FORM_MATCH_COUNT));
         
         double guestAttack = avgTeamGoals(AWAY, FOR, guestName) / avgLeagueGoalsAway;
         double hostDefence = avgTeamGoals(HOME, AGAINST, hostName) / avgLeagueGoalsAway;
-        double avgGuestGoals = guestAttack * hostDefence * avgLeagueGoalsAway;
+        double avgGuestGoals = guestAttack * hostDefence * avgLeagueGoalsAway * Math.sqrt(evaluateForm(guestName, FORM_MATCH_COUNT));
         
         String jsonString = null;
         try {
@@ -189,6 +195,8 @@ public class MathModel {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        
+        //System.out.println(evaluateForm(hostName, 5));
         
         return jsonString;
     }
@@ -249,6 +257,31 @@ public class MathModel {
         return new JSONArray().put(outcomes).put(top5).put(overUnder).put(bts).toString();
     }
 
+    double evaluateForm(String teamName, int matchCount) {
+        int sum = 0, count = 0, recordID = getStartRecordID();
+        while (count < matchCount) {
+            String fullTimeOutcome = stats.get(recordID).get(Keys.FTR.ordinal());
+            
+            if (stats.get(recordID).get(Keys.HomeTeam.ordinal()).equals(teamName)) {
+                if (fullTimeOutcome.equals(HOST_WIN)) {
+                    sum += 2;
+                } else if (fullTimeOutcome.equals(DRAW)) {
+                    sum += 1;
+                }
+                ++count;
+            } else if (stats.get(recordID).get(Keys.AwayTeam.ordinal()).equals(teamName)) {
+                if (fullTimeOutcome.equals(AWAY_WIN)) {
+                    sum += 2;
+                } else if (fullTimeOutcome.equals(DRAW)) {
+                    sum += 1;
+                }
+                ++count;
+            }
+            --recordID;
+        }
+        return sum / (double) (2 * matchCount);
+    }
+    
     public String getHostName() {
         return hostName;
     }

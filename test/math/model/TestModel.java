@@ -128,7 +128,7 @@ public class TestModel {
     
     public static void main(String[] args) {
         TestModel test = new TestModel();
-        System.out.println(test.getAccuraccy(38));
+        System.out.println(test.getAccuraccy(10));
     }
     
 }
