@@ -83,6 +83,11 @@ var Results = {
         $("#result").show();
         $("body").css({ 'background-color': '#ffffff' });
         $("body").css('background-image', 'none');
+        $("#odd-table tbody").append("<tr><td>"+selectSides[0].name.text()+"</td><td>"+1/Results.result[0]["1"]+"</td></tr>");
+        $("#odd-table tbody").append("<tr><td>Draw</td><td>"+1/Results.result[0]["X"]+"</td></tr>");
+        $("#odd-table tbody").append("<tr><td>"+selectSides[1].name.text()+"</td><td>"+1/Results.result[0]["2"]+"</td></tr>");
+        $("#odd-table tbody").append("<tr><td>"+selectSides[0].name.text()+" or Draw</td><td>"+1/(Results.result[0]["1"]+Results.result[0]["X"])+"</td></tr>");
+        $("#odd-table tbody").append("<tr><td>"+selectSides[1].name.text()+" or Draw</td><td>"+1/(Results.result[0]["2"]+Results.result[0]["X"])+"</td></tr>");
         var div1=d3.select(document.getElementById('div1'));
         var div2=d3.select(document.getElementById('div2'));
         var div3=d3.select(document.getElementById('div3'));
@@ -120,6 +125,7 @@ var Results = {
         }
         var brandsData = [];
         for (var key in Results.result[1]) {
+            $("#odd-table tbody").append("<tr><td>"+key+"</td><td>"+1/Results.result[1][key]+"</td></tr>");
             brandsData.push({
                 name: key,
                 y: Results.result[1][key]*100
@@ -164,6 +170,54 @@ var Results = {
                 name: 'Score',
                 colorByPoint: true,
                 data: brandsData
+            }]
+        });
+        $('#goals').highcharts({
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: 0,
+                plotShadow: false
+            },
+            title: {
+                text: 'Over/Under 2.5',
+                align: 'center',
+                verticalAlign: 'middle',
+                y: 50
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            plotOptions: {
+                pie: {
+                    dataLabels: {
+                        enabled: true,
+                        distance: -50,
+                        style: {
+                            fontWeight: 'bold',
+                            color: 'white',
+                            textShadow: '0px 1px 2px black'
+                        }
+                    },
+                    startAngle: -90,
+                    endAngle: 90,
+                    center: ['50%', '75%']
+                }
+            },
+            series: [{
+                type: 'pie',
+                name: 'Over/Under 2.5',
+                innerSize: '50%',
+                data: [
+                    ['Under 2.5', Results.result[2]["under"]*100],
+                    ['Over 2.5', Results.result[2]["over"]*100],
+                    {
+                        name: 'Others',
+                        y: 0.1,
+                        dataLabels: {
+                            enabled: false
+                        }
+                    }
+                ]
             }]
         });
     }

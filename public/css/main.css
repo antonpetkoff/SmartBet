@@ -3,6 +3,7 @@ body{
     background-image: url("../img/bg.jpg");
     background-size: 100% auto;
     color: #ededed;
+    font-family: "Lucida Grande", "Lucida Sans Unicode", Arial, Helvetica, sans-serif;
 }
 #test .arc2{
     stroke-weight:0.1;
@@ -146,6 +147,7 @@ body{
 
 .label {
     text-anchor: middle;
+    font-weight: normal !important;
 }
 
 .radial-svg {
@@ -154,4 +156,7 @@ body{
 }
 .component .label {
     font-size: 20px;
+}
+#odd-table{
+    color: #565656;
 }
