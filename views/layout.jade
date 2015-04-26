@@ -1,24 +1,23 @@
 html
     head
-        title=title
+        title=SmartBet
         link(rel="stylesheet",type="text/css",href="/lib/bootstrap/dist/css/bootstrap.css")
+        link(rel="stylesheet",type="text/css",href="/lib/animate.css/animate.min.css")
         link(rel="stylesheet",type="text/css",href="/css/main.css")
-        link(rel="stylesheet",type="text/css",href="/lib/fontawesome/css/font-awesome.css")
-        style
-            span.logo
-                padding: 0 5px;
             
   body
     .container
-        //- nav.nav.navbar-inverse.navbar-fixed-top
-        //-     .container
-        //-         .navbar-header
-        //-             a.navbar-brand(href="/index")
-        //-                 i.fa.fa-cutlery
-        //-                 span.logo SmartBet
+        nav.nav.navbar-inverse.navbar-fixed-top
+            .container
+                .navbar-header
+                    a.navbar-brand(href="/index")
+                        i.fa.fa-cutlery
+                        span.logo SmartBet
 
         .container-fluid
             .row
                 .col-xs-12.col-md-12
                     .content 
                         block content
+    script(src="/lib/jquery/dist/jquery.min.js")
+    script(src="/js/main.js")

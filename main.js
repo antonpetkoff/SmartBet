@@ -8,7 +8,7 @@ Algorithm = (function() {
 
   function Algorithm() {
     this.javaInstance = "java";
-    this.javaClassDirectory = "./bin";
+    this.javaClassDirectory = "bin;jars/*";
     this.outputEncoding = 'UTF-8';
     this.binary = 'nodeExecProcess.Main';
   }
@@ -17,7 +17,7 @@ Algorithm = (function() {
     console.log.apply(console, arguments);
   };
 
-  Algorithm.prototype.runAlgorithm = function(input, callback) {
+  Algorithm.prototype.runAlgorithm = function(team1, team2, callback) {
     var _this = this;
     tmp.tmpName(function(err, output) {
       var command;
@@ -32,7 +32,8 @@ Algorithm = (function() {
       }
 
       command.push(_this.binary);
-      command.push(input);
+      command.push(team1);
+      command.push(team2);
       command.push(output+".txt");
       
       command = command.join(' ');
@@ -61,8 +62,8 @@ Algorithm = (function() {
 })();
 
 var algo = new Algorithm();
-algo.runAlgorithm("dffgergerherh", function(error, data){
-  //console.log(error);
+algo.runAlgorithm("1", "2", function(error, data){
+  console.log(error);
   console.log(data);
 });
 //tesseract = new Tesseract;

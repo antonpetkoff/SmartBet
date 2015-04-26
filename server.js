@@ -1,7 +1,7 @@
 var express = require("express"),
     app = express(),
     fs = require("fs"),
-    data = {teams:["Manchester United", "Liverpool"]};
+    data = require("./res/epl_teamNames.json");
 app.set("views", "./views");
 app.set('view engine', 'jade');
 
@@ -9,12 +9,12 @@ app.use(express.static("public"));
 
 app.get("/", function(req, res, next){
 	if (fs.existsSync(__dirname+"/views/index.jade")) {
-		res.render("index", {shop:data});
+		res.render("index", {teams:data});
 	}else {
     next();
   };
 });
-
+console.log(data);
 /*app.get("/product/:id", function(req, res, next){
   if (fs.existsSync(__dirname+"/views/index.jade")) {
     res.render("product", {shop:data.products[req.params.id]});
@@ -23,9 +23,12 @@ app.get("/", function(req, res, next){
   };
 });*/
 
+app.get("/data/teams", function(req, res, next){
+  res.json(data)
+});
 app.get("/:fileName", function(req, res, next){
-	if(req.params && req.params.fileName && req.params.fileName != "product" && fs.existsSync(__dirname+"/views/"+req.params.fileName+".jade")){
-		res.render(req.params.fileName, {shop:data});
+	if(req.params && req.params.fileName && fs.existsSync(__dirname+"/views/"+req.params.fileName+".jade")){
+		res.render(req.params.fileName, {teams:data});
 	} else {
 		next();
 	}

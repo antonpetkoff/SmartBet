@@ -1,1 +1,82 @@
-["Arsenal","Aston Villa","Burnley","Chelsea","Crystal Palace","Everton","Hull","Leicester","Liverpool","Man City","Man United","Newcastle","QPR","Southampton","Stoke","Sunderland","Swansea","Tottenham","West Brom","West Ham"]
+[
+    {
+        "name":"Arsenal",
+        "image":"img/teams/arsenal.png"
+    },
+    {
+        "name":"Aston Villa",
+        "image":"img/teams/aston-villa.png"
+    },
+    {
+        "name":"Burnley",
+        "image":"img/teams/burnley.png"
+    },
+    {
+        "name":"Chelsea",
+        "image":"img/teams/chelsea.png"
+    },
+    {
+        "name":"Crystal Palace",
+        "image":"img/teams/crystal-palace.png"
+    },
+    {
+        "name":"Everton",
+        "image":"img/teams/everton.png"
+    },
+    {
+        "name":"Hull",
+        "image":"img/teams/hull-city.png"
+    },
+    {
+        "name":"Leicester",
+        "image":"img/teams/leiceter-city.png"
+    },
+    {
+        "name":"Liverpool",
+        "image":"img/teams/liverpool.png"
+    },
+    {
+        "name":"Man City",
+        "image":"img/teams/manchester-city.png"
+    },
+    {
+        "name":"Man United",
+        "image":"img/teams/manchester-united.png"
+    },
+    {
+        "name":"Newcastle",
+        "image":"img/teams/newcastle-united.png"
+    },
+    {
+        "name":"QPR",
+        "image":"img/teams/queens-park.png"
+    },
+    {
+        "name":"Southampton",
+        "image":"img/teams/southampton-fc.png"
+    },
+    {
+        "name":"Stoke",
+        "image":"img/teams/stoke-city.png"
+    },
+    {
+        "name":"Sunderland",
+        "image":"img/teams/sunderland.png"
+    },
+    {
+        "name":"Swansea",
+        "image":"img/teams/swansea.png"
+    },
+    {
+        "name":"Tottenham",
+        "image":"img/teams/tottenham-hotspur.png"
+    },
+    {
+        "name":"West Brom",
+        "image":"img/teams/west-bromich.png"
+    },
+    {
+        "name":"West Ham",
+        "image":"img/teams/west-ham.png"
+    }
+]

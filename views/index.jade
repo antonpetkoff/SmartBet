@@ -3,16 +3,22 @@ block content
         article.col-xs-12.col-md-6.team-block
             div.logo-container
                 img.logo-back(src="img/select-team/logo-border.png")
-                img.logo-team(src="img/teams/manchester-united.png")
+                img.logo-team.animated.bounceIn(src=teams[0].image)
             div.choose-team
                 div.header H O M E
                 p English Premier League
-                p Manchester United
+                p
+                    a#t1-back Back
+                    span=teams[0].name
+                    a#t1-next Next
         article.col-xs-12.col-md-6.team-block
             div.logo-container
                 img.logo-back(src="img/select-team/logo-border.png")
-                img.logo-team(src="img/teams/chelsea.png")
+                img.logo-team.animated.bounceIn(src=teams[1].image)
             div.choose-team
                 div.header A W A Y
                 p English Premier League
-                p Manchester United
+                p
+                    a#t2-back Back
+                    span=teams[1].name
+                    a#t2-next Next
