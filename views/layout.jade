@@ -15,9 +15,23 @@ html
                         span.logo SmartBet
 
         .container-fluid
-            .row
+            .row#index
                 .col-xs-12.col-md-12
                     .content 
                         block content
+            .row#result
+                div#outer.col-md-9
+                    div#main(style="margin: 0px auto;")
+                        div#div1
+                        div#div2
+                        div#div3
+                        div#div4
+                div#score-chart
+    script(src="/lib/d3/d3.js")
+    script(src="/js/radialProgress.js")
     script(src="/lib/jquery/dist/jquery.min.js")
-    script(src="/js/main.js")
+    script(src="http://code.highcharts.com/highcharts.js")
+    script(src="http://code.highcharts.com/modules/data.js")
+    script(src="http://code.highcharts.com/modules/drilldown.js")
+    script(src="/js/main.js")    
+

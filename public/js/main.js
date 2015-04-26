@@ -60,4 +60,112 @@ var ChooseTeam = {
         });
     }
 }
+var Results = {
+    result :[],
+    init:function(team1, team2){
+        $.ajax({
+            url: host+"data/analyze/"+team1+"/"+team2,
+            dataType: "json",
+            cache: false,
+            success: function(data) {
+                Results.result = data;
+                console.log(data);
+                Results.renderData();
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log('error ' + textStatus + " " + errorThrown);
+            }
+        });
+    },
+    renderData: function(){
+        $(".fire").hide();
+        $("#index").fadeOut();
+        $("#result").show();
+        $("body").css({ 'background-color': '#ffffff' });
+        $("body").css('background-image', 'none');
+        var div1=d3.select(document.getElementById('div1'));
+        var div2=d3.select(document.getElementById('div2'));
+        var div3=d3.select(document.getElementById('div3'));
+        var div4=d3.select(document.getElementById('div4'));
+
+        start();
+
+        function labelFunction(val,min,max) {
+
+        }
+
+        function deselect() {
+            div1.attr("class","radial");
+            div2.attr("class","radial");
+            div3.attr("class","radial");
+        }
+        function start() {
+            var rp1 = radialProgress(document.getElementById('div1'))
+                    .label(selectSides[0].name.text())
+                    .diameter(160)
+                    .value(Results.result[0]["1"]*100)
+                    .render();
+
+            var rp2 = radialProgress(document.getElementById('div2'))
+                    .label("Draw")
+                    .diameter(160)
+                    .value(Results.result[0]["X"]*100)
+                    .render()
+
+            var rp3 = radialProgress(document.getElementById('div3'))
+                    .label(selectSides[1].name.text())
+                    .diameter(160)
+                    .value(Results.result[0]["2"]*100)
+                    .render();
+        }
+        var brandsData = [];
+        for (var key in Results.result[1]) {
+            brandsData.push({
+                name: key,
+                y: Results.result[1][key]*100
+            });
+        }
+        
+        
+        $('#score-chart').highcharts({
+            chart: {
+                type: 'column'
+            },
+            title: {
+                    text: 'Final Score'
+            },
+            xAxis: {
+                type: 'category'
+            },
+            yAxis: {
+                title: {
+                    text: 'Chance'
+                }
+            },
+            legend: {
+                enabled: false
+            },
+            plotOptions: {
+                series: {
+                    borderWidth: 0,
+                    dataLabels: {
+                        enabled: true,
+                        format: '{point.y:.1f}%'
+                    }
+                }
+            },
+
+            tooltip: {
+                headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> chance<br/>'
+            },
+
+            series: [{
+                name: 'Score',
+                colorByPoint: true,
+                data: brandsData
+            }]
+        });
+    }
+}
 ChooseTeam.init()

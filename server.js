@@ -17,7 +17,7 @@ app.get("/", function(req, res, next){
 });
 algorithm.runAlgorithm("1", "2", function(error, data){
   console.log(error);
-  console.log(data);
+  console.log(typeof data);
 });
 /*app.get("/product/:id", function(req, res, next){
   if (fs.existsSync(__dirname+"/views/index.jade")) {
@@ -29,6 +29,18 @@ algorithm.runAlgorithm("1", "2", function(error, data){
 
 app.get("/data/teams", function(req, res, next){
   res.json(data)
+});
+app.get("/data/analyze/:team1/:team2", function(req, res, next){
+  if(req.params){
+    algorithm.runAlgorithm(req.params.team1, req.params.team2, function(error, data){
+      data = data.replace(/[^a-z0-9{}[].:,\s]/gi, '');
+      data = data.replace(/\r\n/g, '');
+      console.log(data);
+      data = JSON.parse(data);
+      res.json(data)
+    });
+  }
+  
 });
 app.get("/:fileName", function(req, res, next){
 	if(req.params && req.params.fileName && fs.existsSync(__dirname+"/views/"+req.params.fileName+".jade")){
