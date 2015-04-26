@@ -25,23 +25,41 @@ public class MathModel {
     private String[] teamNames;
     private String hostName;
     private String guestName;
+    private Conditional<Boolean> iterateCondition; // if iterateCondition is false, stop iterating 
     
     private int startRecordID;              // record ID from which we move back in time
 
-    // iterate through records up to the start of the season
-    private static final String SEASON_START_BOUND = "11/05/14";
+    // iterate through records up to the end of the last season !exclusive!
+    private static final String LAST_SEASON_END = "11/05/14";
     
-    public MathModel(String hostName, String guestName, Statistics stats) {
+    // check if record is in current season
+    public final Conditional<Boolean> isInCurrentSeason = new Conditional<Boolean>() {
+        @Override
+        public Boolean check(int recordID) {
+            return ! LAST_SEASON_END.equals( stats.get(recordID).get(Keys.Date.ordinal()));
+        }
+    };
+    
+    /**
+     * sets the iterateCondition to the default isInCurrentSeason
+     * sets the startRecordID to the default last record ID in the statistics table
+     * 
+     * @param hostName
+     * @param guestName
+     * @param stats
+     */
+    public MathModel(String hostName, String guestName, String statsPath, String teamNamesPath) {
         try {
-            teamNames = readTeamNames("res/epl_teamNames.json");
+            teamNames = readTeamNames(teamNamesPath);
         } catch (JSONException e) {
             e.printStackTrace();
         }
         
         setHostName(hostName);
         setGuestName(guestName);
-        this.stats = stats;
+        this.stats = new Statistics(statsPath);
         startRecordID = stats.size() - 1;
+        iterateCondition = isInCurrentSeason;
     }
     
     private String[] readTeamNames(String jsonPath) throws JSONException {
@@ -82,7 +100,7 @@ public class MathModel {
      * @param recordID  : recordID in the matches table from which to move back in time
      * @return  the average goals scored in the league at home or away
      */
-    double avgLeagueGoals(char where) {
+    private double avgLeagueGoals(char where) {
         if (where != HOME && where != AWAY) {
             throw new IllegalArgumentException("only \'H\' or \'A\' is accepted as \'where\' argument!");
         }
@@ -91,7 +109,7 @@ public class MathModel {
         
         int recordField = (where == HOME) ? Keys.FTHG.ordinal() : Keys.FTAG.ordinal();
         
-        for (int i = stats.size() - 1; i > 1 && !(SEASON_START_BOUND.equals( stats.get(i).get(Keys.Date.ordinal()) )); --i) {
+        for (int i = stats.size() - 1; i > 1 && iterateCondition.check(i); --i) {
             sum += Integer.valueOf(stats.get(i).get(recordField));
             ++count;
         }
@@ -109,7 +127,7 @@ public class MathModel {
      * @param recordID  : recordID in the matches table from which to move back in time
      * @return
      */
-    double avgTeamGoals(char where, char forWho, String teamName) {
+    private double avgTeamGoals(char where, char forWho, String teamName) {
         if (forWho != FOR && forWho != AGAINST) {
             throw new IllegalArgumentException("only \'F\' or \'A\' is accepted as \'forWho\' argument!");
         }
@@ -140,7 +158,7 @@ public class MathModel {
         
         int sum = 0, count = 0;
         
-        for (int i = stats.size() - 1; i > 1 && !(SEASON_START_BOUND.equals( stats.get(i).get(Keys.Date.ordinal()) )); --i) {
+        for (int i = stats.size() - 1; i > 1 && iterateCondition.check(i); --i) {
             if (stats.get(i).get(teamField).equals(teamName)) {
                 sum += Integer.valueOf(stats.get(i).get(goalsField));
                 ++count;
@@ -150,7 +168,7 @@ public class MathModel {
         return sum / (double) count;
     }
     
-    String calculateProbabilities() {
+    public String calculateProbabilities() {
         double avgLeagueGoalsAtHome = avgLeagueGoals(HOME);
         double avgLeagueGoalsAway = avgLeagueGoals(AWAY);
         
@@ -252,7 +270,7 @@ public class MathModel {
     }
 
     public void setGuestName(String guestName) {
-        if (!isValidTeamName(hostName)) {
+        if (!isValidTeamName(guestName)) {
             throw new IllegalArgumentException("guestName doesn\'t exist in teamNames!");
         }
         this.guestName = guestName;
@@ -275,8 +293,7 @@ public class MathModel {
     }
     
     public static void main(String[] args) {
-        Statistics stats = new Statistics();
-        MathModel mm = new MathModel("Arsenal", "Chelsea", stats);
+        MathModel mm = new MathModel("Arsenal", "Chelsea", Statistics.EPL_MATCHES, Statistics.EPL_TEAM_NAMES);
         System.out.println(mm.calculateProbabilities());
     }
 

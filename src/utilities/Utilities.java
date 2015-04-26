@@ -23,7 +23,7 @@ public class Utilities {
     }
     
     public static void changeDateFormat(String destination) {
-        Statistics stats = new Statistics();
+        Statistics stats = new Statistics(Statistics.EPL_MATCHES);
         StringBuilder result = new StringBuilder();
         
         for (int i = 1; i < stats.size(); ++i) {

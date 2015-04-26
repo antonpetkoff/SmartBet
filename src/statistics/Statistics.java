@@ -16,12 +16,13 @@ import org.apache.commons.csv.CSVRecord;
  */
 public class Statistics {
     
-    private static final String EPL_MATCHES = "res/epl_matches.csv";
+    public static final String EPL_MATCHES = "res/epl_matches.csv";
+    public static final String EPL_TEAM_NAMES = "res/epl_teamNames.json";
     
     private List<CSVRecord> records;
     
-    public Statistics() {
-        try(CSVParser parser = new CSVParser(new BufferedReader(new FileReader(EPL_MATCHES)), CSVFormat.DEFAULT);) {
+    public Statistics(String statsPath) {
+        try(CSVParser parser = new CSVParser(new BufferedReader(new FileReader(statsPath)), CSVFormat.DEFAULT);) {
             records = parser.getRecords();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
