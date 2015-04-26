@@ -11,6 +11,17 @@ public class TestModel {
         mm = new MathModel("Arsenal", "Chelsea", Statistics.EPL_MATCHES, Statistics.EPL_TEAM_NAMES);
     }
 
+    /**
+     * 
+     * @param teamName
+     * @param howMany
+     * @return
+     */
+    private int countPlayedMatches(String teamName, int howMany) {
+        // TODO
+        return 0;
+    }
+    
     private boolean isOutcomeGuessed(String expected, String jsonActual) {
         // TODO
         return false;
