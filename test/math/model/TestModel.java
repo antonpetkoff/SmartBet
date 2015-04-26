@@ -12,6 +12,8 @@ public class TestModel {
     private static final String HOST_WIN = "H";
     private static final String DRAW = "D";
     private static final String AWAY_WIN = "A";
+    private static final int MATHCES_PER_ROUND = 10;
+    private static final double MATCH_COUNT_TESTABLE_THRESHOLD = 0.75;
     
     private MathModel mm;
     
@@ -22,19 +24,19 @@ public class TestModel {
 
     /**
      * Count the number of matches played by teamName from mm.getStartRecordID() to 
-     * mm.getStartRecordID() - howMany.
+     * mm.getStartRecordID() - matchCount.
      * 
      * @param teamName
-     * @param howMany
+     * @param matchCount
      * @return
      */
-    private int countPlayedMatches(String teamName, int howMany) {
-        if (mm.getStartRecordID() - howMany < 1) {
+    private int countPlayedMatches(String teamName, int matchCount) {
+        if (mm.getStartRecordID() - matchCount < 1) {
             return 0;
         }
         
         int count = 0;
-        for (int i = mm.getStartRecordID(); i > mm.getStartRecordID() - howMany; --i) {
+        for (int i = mm.getStartRecordID(); i > mm.getStartRecordID() - matchCount; --i) {
             if (mm.getStats().get(i).get(Keys.HomeTeam.ordinal()).equals(teamName)
                     || mm.getStats().get(i).get(Keys.AwayTeam.ordinal()).equals(teamName)) {
                 ++count;
@@ -43,8 +45,9 @@ public class TestModel {
         return count;
     }
     
-    private boolean isMatchTestable(String hostName, String guestName, int howMany) {
-        return countPlayedMatches(hostName, howMany) > howMany / 10 * 0.75 && countPlayedMatches(guestName, howMany) > howMany / 10 * 0.75;
+    private boolean isMatchTestable(String hostName, String guestName, int matchCount) {
+        return countPlayedMatches(hostName, matchCount) > matchCount / MATHCES_PER_ROUND * MATCH_COUNT_TESTABLE_THRESHOLD
+                && countPlayedMatches(guestName, matchCount) > matchCount / MATHCES_PER_ROUND * MATCH_COUNT_TESTABLE_THRESHOLD;
     }
     
     private boolean isOutcomeGuessed(String expected, String jsonActual) throws JSONException {
@@ -89,7 +92,7 @@ public class TestModel {
         
         mm.setStartRecordID(mm.getStats().size() - 1);
         
-        while (mm.getStartRecordID() > rounds * 10) {     // each round has 10 matches
+        while (mm.getStartRecordID() > rounds * MATHCES_PER_ROUND) {     // each round has 10 matches
             mm.setHostName(mm.getStats().get(mm.getStartRecordID()).get(Keys.HomeTeam.ordinal()));
             mm.setGuestName(mm.getStats().get(mm.getStartRecordID()).get(Keys.AwayTeam.ordinal()));
             expected = mm.getStats().get(mm.getStartRecordID()).get(Keys.FTR.ordinal());
@@ -97,9 +100,9 @@ public class TestModel {
             mm.setStartRecordID(mm.getStartRecordID() - 1);
             pivotRecordID = mm.getStartRecordID();
             
-            mm.setIterateCondition(new MatchCountConditional(pivotRecordID, rounds * 10));
+            mm.setIterateCondition(new MatchCountConditional(pivotRecordID, rounds * MATHCES_PER_ROUND));
             
-            if (isMatchTestable(mm.getHostName(), mm.getGuestName(), rounds*10)) {
+            if (isMatchTestable(mm.getHostName(), mm.getGuestName(), rounds * MATHCES_PER_ROUND)) {
                 ++testableMatches;
                 jsonForecast = mm.calculateProbabilities();
                 
