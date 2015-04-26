@@ -17,6 +17,7 @@ public class TestModel {
     
     public TestModel() {
         mm = new MathModel("Arsenal", "Chelsea", Statistics.EPL_MATCHES, Statistics.EPL_TEAM_NAMES);
+        mm.setValidateNames(false);
     }
 
     /**

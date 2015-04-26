@@ -25,10 +25,10 @@ public class MathModel {
     private String[] teamNames;
     private String hostName;
     private String guestName;
-    private Conditional<Boolean> iterateCondition; // if iterateCondition is false, stop iterating 
-    
+    private Conditional<Boolean> iterateCondition; // if iterateCondition is false, stop iterating
     private int startRecordID;              // record ID from which we move back in time
-
+    private boolean validateNames;
+    
     // iterate through records up to the end of the last season !exclusive!
     private static final String LAST_SEASON_END = "11/05/14";
     
@@ -43,6 +43,7 @@ public class MathModel {
     /**
      * sets the iterateCondition to the default isInCurrentSeason
      * sets the startRecordID to the default last record ID in the statistics table
+     * sets validateName boolean to true by default
      * 
      * @param hostName
      * @param guestName
@@ -55,11 +56,13 @@ public class MathModel {
             e.printStackTrace();
         }
         
+        
         setHostName(hostName);
         setGuestName(guestName);
         this.stats = new Statistics(statsPath);
         startRecordID = stats.size() - 1;
         setIterateCondition(isInCurrentSeason);
+        setValidateNames(true);
     }
     
     private String[] readTeamNames(String jsonPath) throws JSONException {
@@ -74,7 +77,7 @@ public class MathModel {
         
         String[] teamNames = new String[json.length()];
         for (int i = 0; i < json.length(); ++i) {
-            teamNames[i] = json.getString(i);
+            teamNames[i] = json.getJSONObject(i).getString("name");
         }
         return teamNames;
     }
@@ -251,6 +254,10 @@ public class MathModel {
     }
 
     private boolean isValidTeamName(String teamName) {
+        if (!validateNames) {
+            return true;
+        }
+        
         for (String name : teamNames) {
             if (teamName.equals(name)) {
                 return true;
@@ -260,9 +267,9 @@ public class MathModel {
     }
     
     public void setHostName(String hostName) {
-//        if (!isValidTeamName(hostName)) {
-//            throw new IllegalArgumentException("hostName doesn\'t exist in teamNames!");
-//        }
+        if (!isValidTeamName(hostName)) {
+            throw new IllegalArgumentException("hostName doesn\'t exist in teamNames!");
+        }
         this.hostName = hostName;
     }
 
@@ -271,9 +278,9 @@ public class MathModel {
     }
 
     public void setGuestName(String guestName) {
-//        if (!isValidTeamName(guestName)) {
-//            throw new IllegalArgumentException("guestName doesn\'t exist in teamNames!");
-//        }
+        if (!isValidTeamName(guestName)) {
+            throw new IllegalArgumentException("guestName doesn\'t exist in teamNames!");
+        }
         this.guestName = guestName;
     }
     
@@ -304,6 +311,14 @@ public class MathModel {
 
     public void setIterateCondition(Conditional<Boolean> iterateCondition) {
         this.iterateCondition = iterateCondition;
+    }
+
+    public boolean validatesNames() {
+        return validateNames;
+    }
+
+    public void setValidateNames(boolean validateNames) {
+        this.validateNames = validateNames;
     }
 
 }
