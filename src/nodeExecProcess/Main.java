@@ -10,7 +10,6 @@ import math.model.MathModel;
 public class Main {
 
 	public static void main(String[] args) {
-
         int hostID = Integer.valueOf(args[0]);
 		int guestID = Integer.valueOf(args[1]);
 		String outputFile = args[2];
