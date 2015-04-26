@@ -16,6 +16,7 @@
   ],
   "dependencies": {
     "bootstrap": "~3.3.4",
-    "animate.css": "~3.2.6"
+    "animate.css": "~3.2.6",
+    "d3": "~3.5.5"
   }
 }

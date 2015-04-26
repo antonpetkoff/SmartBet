@@ -25,6 +25,9 @@ body{
 .choose-team{
     margin: 40px 100px;
     background-color:#2d2e2f;
+    border: solid 1px #191919;
+    font-family: Helvetica;
+    font-size: 18px;
 }
 .choose-team .header{
     font-family: Impact;
@@ -32,4 +35,30 @@ body{
     font-size: 1.2em;
     background-color: #181818;
     color: #dbdbdb;
+}
+.choose-team .rw{
+    padding: 5px;
+}
+.choose-team .holder{
+    width: 180px;
+    margin: 0 auto;
+    margin-bottom:5px ;
+}
+.arrow-button{
+    float: left;
+    cursor: pointer;
+}
+.team-name{
+    float: left;
+    min-width: 125px;
+}
+.clear{
+    clear:both;
+}
+.arrow-button img{
+    width: 20px;
+}
+.fire{
+    margin: 0 auto;
+    display: block;
 }

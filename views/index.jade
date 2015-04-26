@@ -2,23 +2,27 @@ extends layout
 block content
         article.col-xs-12.col-md-6.team-block
             div.logo-container
-                img.logo-back(src="img/select-team/logo-border.png")
-                img.logo-team.animated.bounceIn(src=teams[0].image)
+                img.logo-back(src="/img/select-team/logo-border.png")
+                img.logo-team.animated.bounceIn#team1-logo(src=teams[0].image)
             div.choose-team
                 div.header H O M E
-                p English Premier League
-                p
-                    a#t1-back Back
-                    span=teams[0].name
-                    a#t1-next Next
+                p.rw English Premier League
+                div.rw.holder
+                    div.arrow-button#t1-back: img(src="/img/back.png")
+                    div.team-name#team1-name=teams[0].name
+                    div.arrow-button#t1-next: img(src="/img/next.png")
+                    .clear
         article.col-xs-12.col-md-6.team-block
             div.logo-container
-                img.logo-back(src="img/select-team/logo-border.png")
-                img.logo-team.animated.bounceIn(src=teams[1].image)
+                img.logo-back(src="/img/select-team/logo-border.png")
+                img.logo-team.animated.bounceIn#team2-logo(src=teams[1].image)
             div.choose-team
                 div.header A W A Y
-                p English Premier League
-                p
-                    a#t2-back Back
-                    span=teams[1].name
-                    a#t2-next Next
+                p.rw English Premier League
+                div.rw.holder
+                    div.arrow-button#t2-back: img(src="/img/back.png")
+                    div.team-name#team2-name=teams[1].name
+                    div.arrow-button#t2-next: img(src="/img/next.png")
+                    .clear
+
+        button.btn.btn-default.fire Analyze!

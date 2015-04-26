@@ -1,6 +1,7 @@
 var express = require("express"),
     app = express(),
     fs = require("fs"),
+    algorithm = require("./proxy.js");
     data = require("./res/epl_teamNames.json");
 app.set("views", "./views");
 app.set('view engine', 'jade');
@@ -14,7 +15,10 @@ app.get("/", function(req, res, next){
     next();
   };
 });
-console.log(data);
+algorithm.runAlgorithm("1", "2", function(error, data){
+  console.log(error);
+  console.log(data);
+});
 /*app.get("/product/:id", function(req, res, next){
   if (fs.existsSync(__dirname+"/views/index.jade")) {
     res.render("product", {shop:data.products[req.params.id]});
