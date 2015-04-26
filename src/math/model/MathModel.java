@@ -59,7 +59,7 @@ public class MathModel {
         setGuestName(guestName);
         this.stats = new Statistics(statsPath);
         startRecordID = stats.size() - 1;
-        iterateCondition = isInCurrentSeason;
+        setIterateCondition(isInCurrentSeason);
     }
     
     private String[] readTeamNames(String jsonPath) throws JSONException {
@@ -109,7 +109,7 @@ public class MathModel {
         
         int recordField = (where == HOME) ? Keys.FTHG.ordinal() : Keys.FTAG.ordinal();
         
-        for (int i = stats.size() - 1; i > 1 && iterateCondition.check(i); --i) {
+        for (int i = stats.size() - 1; i > 1 && getIterateCondition().check(i); --i) {
             sum += Integer.valueOf(stats.get(i).get(recordField));
             ++count;
         }
@@ -158,7 +158,7 @@ public class MathModel {
         
         int sum = 0, count = 0;
         
-        for (int i = stats.size() - 1; i > 1 && iterateCondition.check(i); --i) {
+        for (int i = stats.size() - 1; i > 1 && getIterateCondition().check(i); --i) {
             if (stats.get(i).get(teamField).equals(teamName)) {
                 sum += Integer.valueOf(stats.get(i).get(goalsField));
                 ++count;
@@ -242,6 +242,7 @@ public class MathModel {
         JSONObject bts = new JSONObject();
         bts.put("both", bothTeamsScore).put("one", oneTeamScores);
         
+        
         return new JSONArray().put(outcomes).put(top5).put(overUnder).put(bts).toString();
     }
 
@@ -295,6 +296,14 @@ public class MathModel {
     public static void main(String[] args) {
         MathModel mm = new MathModel("Arsenal", "Chelsea", Statistics.EPL_MATCHES, Statistics.EPL_TEAM_NAMES);
         System.out.println(mm.calculateProbabilities());
+    }
+
+    public Conditional<Boolean> getIterateCondition() {
+        return iterateCondition;
+    }
+
+    public void setIterateCondition(Conditional<Boolean> iterateCondition) {
+        this.iterateCondition = iterateCondition;
     }
 
 }

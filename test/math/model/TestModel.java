@@ -24,19 +24,36 @@ public class TestModel {
      */
     public double getAccuraccy(int rounds) {
         int guessedMatches = 0, totalMatches = 0, testableMatches = 0;
-        String jsonForecast = null;
+        String expected = null, jsonForecast = null;
+        
+        mm.setIterateCondition(new Conditional<Boolean>() {
+            @Override
+            public Boolean check(int matchCount) {
+                return matchCount < 20*19;
+            }
+        });
         
         mm.setStartRecordID(mm.getStats().size() - 1);
+        
         while (mm.getStartRecordID() > 20*19) {     // 19*20 = 380 matches in one league season
             mm.setHostName(mm.getStats().get(mm.getStartRecordID()).get(Keys.HomeTeam.ordinal()));
             mm.setGuestName(mm.getStats().get(mm.getStartRecordID()).get(Keys.AwayTeam.ordinal()));
-            //TODO
+            
+            // TODO check if the match is testable!
+            
+            expected = mm.getStats().get(mm.getStartRecordID()).get(Keys.FTR.ordinal());
             
             mm.setStartRecordID(mm.getStartRecordID() - 1);
+            jsonForecast = mm.calculateProbabilities();
+            
+            if (isOutcomeGuessed(expected, jsonForecast)) {
+                ++guessedMatches;
+            }
+            
             ++totalMatches;
         }
         
-        return 0.0;
+        return guessedMatches / (double) testableMatches;
     }
     
 }
