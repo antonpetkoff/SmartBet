@@ -260,9 +260,9 @@ public class MathModel {
     }
     
     public void setHostName(String hostName) {
-        if (!isValidTeamName(hostName)) {
-            throw new IllegalArgumentException("hostName doesn\'t exist in teamNames!");
-        }
+//        if (!isValidTeamName(hostName)) {
+//            throw new IllegalArgumentException("hostName doesn\'t exist in teamNames!");
+//        }
         this.hostName = hostName;
     }
 
@@ -271,9 +271,9 @@ public class MathModel {
     }
 
     public void setGuestName(String guestName) {
-        if (!isValidTeamName(guestName)) {
-            throw new IllegalArgumentException("guestName doesn\'t exist in teamNames!");
-        }
+//        if (!isValidTeamName(guestName)) {
+//            throw new IllegalArgumentException("guestName doesn\'t exist in teamNames!");
+//        }
         this.guestName = guestName;
     }
     
