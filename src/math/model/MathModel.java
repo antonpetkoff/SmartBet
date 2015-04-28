@@ -19,6 +19,10 @@ public class MathModel {
     private static final String DRAW = "D";
     private static final String AWAY_WIN = "A";
     
+    private static final double WIN_POINTS = 1.0;
+    private static final double DRAW_POINTS = 0.95;
+    private static final double LOSS_POINTS = 0.90;
+    
     private static final char HOME = 'H';   // marks matches as host
     private static final char AWAY = 'A';   // marks matches as guest
     
@@ -183,11 +187,15 @@ public class MathModel {
         
         double hostAttack = avgTeamGoals(HOME, FOR, hostName) / avgLeagueGoalsAtHome;
         double guestDefence = avgTeamGoals(AWAY, AGAINST, guestName) / avgLeagueGoalsAtHome;
-        double avgHostGoals = hostAttack * guestDefence * avgLeagueGoalsAtHome * Math.sqrt(evaluateForm(hostName, FORM_MATCH_COUNT));
+        double avgHostGoals = hostAttack * guestDefence * avgLeagueGoalsAtHome;
+        avgHostGoals *= Math.sqrt(evaluateForm(hostName, FORM_MATCH_COUNT));
+        //avgHostGoals *= Math.sqrt(evaluateHistory(hostName, guestName, 5));
         
         double guestAttack = avgTeamGoals(AWAY, FOR, guestName) / avgLeagueGoalsAway;
         double hostDefence = avgTeamGoals(HOME, AGAINST, hostName) / avgLeagueGoalsAway;
-        double avgGuestGoals = guestAttack * hostDefence * avgLeagueGoalsAway * Math.sqrt(evaluateForm(guestName, FORM_MATCH_COUNT));
+        double avgGuestGoals = guestAttack * hostDefence * avgLeagueGoalsAway;
+        avgGuestGoals *= Math.sqrt(evaluateForm(guestName, FORM_MATCH_COUNT));
+        //avgGuestGoals *= Math.sqrt(evaluateHistory(guestName, hostName, 5));
         
         String jsonString = null;
         try {
@@ -195,8 +203,6 @@ public class MathModel {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        
-        //System.out.println(evaluateForm(hostName, 5));
         
         return jsonString;
     }
@@ -257,9 +263,49 @@ public class MathModel {
         return new JSONArray().put(outcomes).put(top5).put(overUnder).put(bts).toString();
     }
 
+    double evaluateHistory(String hostName, String guestName, int matchCount) {
+        double sum = 0.0;
+        int recordID = getStartRecordID(), count = 0;
+        
+        while (count < matchCount && recordID > 1) {
+            String fullTimeOutcome = stats.get(recordID).get(Keys.FTR.ordinal());
+            
+            if (stats.get(recordID).get(Keys.HomeTeam.ordinal()).equals(hostName) 
+                && stats.get(recordID).get(Keys.AwayTeam.ordinal()).equals(guestName)) {
+                if (fullTimeOutcome.equals(HOST_WIN)) {
+                    sum += WIN_POINTS;
+                } else if (fullTimeOutcome.equals(DRAW)) {
+                    sum += DRAW_POINTS;
+                } else if (fullTimeOutcome.equals(AWAY_WIN)) {
+                    sum += LOSS_POINTS;
+                }
+                ++count;
+                //System.out.println(sum);
+            } else if (stats.get(recordID).get(Keys.HomeTeam.ordinal()).equals(guestName) 
+                && stats.get(recordID).get(Keys.AwayTeam.ordinal()).equals(hostName)) {
+                if (fullTimeOutcome.equals(HOST_WIN)) {
+                    sum += LOSS_POINTS;
+                } else if (fullTimeOutcome.equals(DRAW)) {
+                    sum += DRAW_POINTS;
+                } else if (fullTimeOutcome.equals(AWAY_WIN)) {
+                    sum += WIN_POINTS;
+                }
+                //System.out.println(sum);
+                ++count;
+            }
+            --recordID;
+        }
+        
+        if (sum == 0) {
+            return 1;
+        }
+        
+        return sum / (double) matchCount;
+    }
+    
     double evaluateForm(String teamName, int matchCount) {
         int sum = 0, count = 0, recordID = getStartRecordID();
-        while (count < matchCount) {
+        while (count < matchCount && recordID > 1) {
             String fullTimeOutcome = stats.get(recordID).get(Keys.FTR.ordinal());
             
             if (stats.get(recordID).get(Keys.HomeTeam.ordinal()).equals(teamName)) {
