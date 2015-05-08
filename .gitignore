@@ -30,3 +30,4 @@ public/lib
 .classpath
 
 bin/.gitignore
+node_modules
